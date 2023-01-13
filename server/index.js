@@ -1,12 +1,10 @@
 const express = require('express')
 const cors = require('cors')
-const rmqServer = require('./rmq-server')
 const clientService = require('./client')
 const fs = require('fs')
 const {extractData} = require('./utils/helper')
 
 const app = express()
-rmqServer()
 
 app.use(express.json())
 app.use(cors())
