@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const clientService = require('./client')
+const queueService = require('./queue-service')
 const fs = require('fs')
 const {extractData} = require('./utils/helper')
 
@@ -12,7 +12,7 @@ app.use(cors())
 app.get('/api/:service_type/:api_name/:type', async (req, res)=>{
   const {service_type, type} = req.params
   const payload = extractData(req)
-  await clientService(service_type, payload, type, (data)=>{
+  await queueService(service_type, payload, type, (data)=>{
     res.json(JSON.parse(data))
   })
 })
