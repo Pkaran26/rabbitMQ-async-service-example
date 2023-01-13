@@ -8,17 +8,19 @@ const handleService = async (rabbitMQ, data, serviceQueue)=>{
   const correlationId = childRabbitMQ.generateUuid()
   childRabbitMQ.sendToServer(JSON.stringify(data.content), serviceQueue, q, correlationId)
 
-  childRabbitMQ.consumeByClient(q.queue, correlationId, (reply)=>{
-    const payload = {
-      jobID: data.correlationId,
-      data: JSON.parse(reply.content)
-    }
-    rabbitMQ.addToCache(data.correlationId, payload)
-    rabbitMQ.sendToClient(JSON.stringify(payload), data.replyTo, data.correlationId)
+  return new Promise ((resolve, reject) =>{
+    childRabbitMQ.consumeByClient(q.queue, correlationId, (reply)=>{
+      const payload = {
+        jobID: data.correlationId,
+        data: JSON.parse(reply.content)
+      }
+      rabbitMQ.addToCache(data.correlationId, payload)
 
-    setTimeout(function() {
-      childRabbitMQ.connection.close()
-    }, 500)
+      setTimeout(function() {
+        childRabbitMQ.connection.close()
+        resolve(payload)
+      }, 500)
+    })
   })
 }
 
@@ -33,7 +35,9 @@ const rmqServer = async ()=>{
     rabbitMQ.consumeByServer(taskQueue, async (data)=>{
       const {serviceType, payload} = JSON.parse(data.content)
       if (serviceQueues.includes(serviceType+'Queue')) {
-        await handleService(rabbitMQ, {...data, content: payload}, serviceType+'Queue')
+        const result = await handleService(rabbitMQ, {...data, content: payload}, serviceType+'Queue')
+        rabbitMQ.sendToClient(JSON.stringify(result), data.replyTo, data.correlationId)
+
       } else {
         rabbitMQ.sendToClient(JSON.stringify({success: false, message: "service does not matched"}), data.replyTo, data.correlationId)
       }
