@@ -1,6 +1,6 @@
 const RabbitMQ = require('./class/rabbitmq')
 
-const clientService = async (serviceType, payload, type, callback)=>{
+const queueService = async (serviceType, payload, type, callback)=>{
   const queue = 'tasks'
   try {
     const rabbitMQ = new RabbitMQ()
@@ -36,4 +36,4 @@ const clientService = async (serviceType, payload, type, callback)=>{
   }
 }
 
-module.exports = clientService
+module.exports = queueService
