@@ -12,8 +12,8 @@ const filterService = async (content) =>{
   }
 }
 
-const productManager = async ()=>{
-  const queue = 'product'
+const qhandler = async ()=>{
+  const queue = 'productQueue'
   try {
     const rabbitMQ = new RabbitMQ()
     await rabbitMQ.createChannel()
@@ -33,4 +33,4 @@ const productManager = async ()=>{
   }
 }
 
-module.exports = productManager
+module.exports = qhandler

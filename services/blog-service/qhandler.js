@@ -17,7 +17,7 @@ const filterService = async (content) =>{
 }
 
 const qhandler = async ()=>{
-  const queue = 'blog'
+  const queue = 'blogQueue'
   try {
     const rabbitMQ = new RabbitMQ()
     await rabbitMQ.createChannel()

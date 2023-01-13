@@ -1,7 +1,7 @@
 const RabbitMQ = require('./class/rabbitmq')
 
 const queueService = async (serviceType, payload, type, callback)=>{
-  const queue = 'tasks'
+  const queue = 'requestQueue'
   try {
     const rabbitMQ = new RabbitMQ()
     await rabbitMQ.createChannel()

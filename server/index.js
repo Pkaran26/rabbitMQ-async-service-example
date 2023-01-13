@@ -18,7 +18,7 @@ app.get('/api/:service_type/:api_name/:type', async (req, res)=>{
 })
 
 app.get('/api/status/:jobID', async (req, res)=>{
-  fs.readFile('./cache.txt', function(err, cache) {
+  fs.readFile(__dirname+'/../cache.txt', function(err, cache) {
     const data = JSON.parse(cache).filter((e)=>{
       return e.jobID == req.params.jobID
     })

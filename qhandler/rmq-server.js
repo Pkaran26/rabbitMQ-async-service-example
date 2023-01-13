@@ -23,8 +23,8 @@ const handleService = async (rabbitMQ, data, serviceQueue)=>{
 }
 
 const rmqServer = async ()=>{
-  const taskQueue = 'tasks'
-  const serviceQueues = ['blog', 'product']
+  const taskQueue = 'requestQueue'
+  const serviceQueues = ['blogQueue', 'productQueue']
   try {
     const rabbitMQ = new RabbitMQ()
     await rabbitMQ.createChannel()
@@ -32,8 +32,8 @@ const rmqServer = async ()=>{
 
     rabbitMQ.consumeByServer(taskQueue, async (data)=>{
       const {serviceType, payload} = JSON.parse(data.content)
-      if (serviceQueues.includes(serviceType)) {
-        await handleService(rabbitMQ, {...data, content: payload}, serviceType)
+      if (serviceQueues.includes(serviceType+'Queue')) {
+        await handleService(rabbitMQ, {...data, content: payload}, serviceType+'Queue')
       } else {
         rabbitMQ.sendToClient(JSON.stringify({success: false, message: "service does not matched"}), data.replyTo, data.correlationId)
       }
