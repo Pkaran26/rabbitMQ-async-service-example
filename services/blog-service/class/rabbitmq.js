@@ -43,7 +43,7 @@ class RabbitMQ {
 
   addToCache (jobID, payload) {
     this.cache = [...this.cache, payload]
-    fs.writeFile('cache.txt', JSON.stringify(this.cache, null, 2), function (err) {
+    fs.writeFile(__dirname+'/../../cache.txt', JSON.stringify(this.cache, null, 2), function (err) {
       if (err) {
         return console.log('Cache not saved')
       }
