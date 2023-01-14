@@ -5,6 +5,14 @@ const getPosts = async ()=>{
   return await http(`${BASE_URL}/posts`)
 }
 
+const getPostDetail = async (payload)=>{
+  return await http(`${BASE_URL}/posts/${payload.params.id}`)
+}
+
+const getPostComments = async (payload)=>{
+  return await http(`${BASE_URL}/posts/${payload.params.id}/comments`)
+}
+
 const getComments = async ()=>{
   return await http(`${BASE_URL}/comments`)
 }
@@ -14,7 +22,9 @@ const getUsers = async ()=>{
 }
 
 module.exports = {
-  getPosts,
-  getComments,
-  getUsers
+  'getPosts': getPosts,
+  'getPostDetail': getPostDetail,
+  'getPostComments': getPostComments,
+  'getComments': getComments,
+  'getUsers': getUsers
 }

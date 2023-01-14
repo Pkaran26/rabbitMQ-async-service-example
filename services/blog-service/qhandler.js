@@ -1,23 +1,18 @@
 const RabbitMQ = require('./class/rabbitmq')
-const { getPosts, getComments, getUsers } = require('./services/blog')
+const service = require('./services/blog')
 
 const filterService = async (content) =>{
-  if (content.params.api_name == 'posts') {
-    return await getPosts(content)
-  } else if (content.params.api_name == 'comments') {
-    return await getComments(content)
-  } else if (content.params.api_name == 'users') {
-    return await getUsers(content)
-  } else {
+  try {
+    return await service[content.params.api_name](content)
+  } catch (error) {
     return {
       status: false,
-      message: 'path not found'
+      message: 'function not found'
     }
   }
 }
 
-const qhandler = async ()=>{
-  const queue = 'blogQueue'
+const qhandler = async (queue)=>{
   try {
     const rabbitMQ = new RabbitMQ()
     await rabbitMQ.createChannel()
@@ -28,11 +23,7 @@ const qhandler = async ()=>{
       rabbitMQ.sendToClient(JSON.stringify(payload), data.replyTo, data.correlationId)
     })
   } catch (error) {
-    console.log('channel not created', error) 
-    callback({
-      success: false,
-      message: 'server error'
-    })
+    console.log('channel not created', error)
     process.exit(0)
   }
 }

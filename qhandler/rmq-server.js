@@ -24,9 +24,7 @@ const handleService = async (rabbitMQ, data, serviceQueue)=>{
   })
 }
 
-const rmqServer = async ()=>{
-  const taskQueue = 'requestQueue'
-  const serviceQueues = ['blogQueue', 'productQueue']
+const rmqServer = async (taskQueue, serviceQueues)=>{
   try {
     const rabbitMQ = new RabbitMQ()
     await rabbitMQ.createChannel()

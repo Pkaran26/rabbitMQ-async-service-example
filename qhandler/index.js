@@ -3,7 +3,10 @@ const cors = require('cors')
 const rmqServer = require('./rmq-server')
 
 const app = express()
-rmqServer()
+
+const taskQueue = 'requestQueue'
+const serviceQueues = ['blogQueue', 'productQueue']
+rmqServer(taskQueue, serviceQueues)
 
 app.use(express.json())
 app.use(cors())
