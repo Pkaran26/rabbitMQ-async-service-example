@@ -1,17 +1,13 @@
 const RabbitMQ = require('./class/rabbitmq')
-const { getPosts, getComments, getUsers } = require('./services/blog')
+const blogService = require('./services/blog')
 
 const filterService = async (content) =>{
-  if (content.params.api_name == 'posts') {
-    return await getPosts(content)
-  } else if (content.params.api_name == 'comments') {
-    return await getComments(content)
-  } else if (content.params.api_name == 'users') {
-    return await getUsers(content)
-  } else {
+  try {
+    return await blogService[content.params.api_name](content)
+  } catch (error) {
     return {
       status: false,
-      message: 'path not found'
+      message: 'service not found'
     }
   }
 }

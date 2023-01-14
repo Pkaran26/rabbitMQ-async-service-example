@@ -28,21 +28,24 @@ const apiMap = {
   type: 'sync',
   callMap: {
     1: {
-      name: 'blog_posts',
+      name: 'blog_getPosts',
       next:[2]
     },
     2: {
-      name: 'blog_users',
+      name: 'blog_getPostDetail',
+      params: {
+        id: 'params.id,'
+      },
       next:[3]
     },
     3: {
-      name: 'product_products',
+      name: 'product_getProducts',
       next:[]
     }
   }
 }
 
-const runApiMap = (rabbitMQ, data, )=>{
+const runApiMap = (rabbitMQ, data)=>{
   const {serviceType, payload} = JSON.parse(data.content)
   return new Promise( async(resolve, reject)=>{
     let index = 1
@@ -58,7 +61,7 @@ const runApiMap = (rabbitMQ, data, )=>{
         ...payload,
         params: {
           ...payload.params,
-          api_name: res[1]
+          api_name: res[1],
         }
       }
     }, res[0]+'Queue')

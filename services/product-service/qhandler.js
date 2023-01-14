@@ -1,13 +1,13 @@
 const RabbitMQ = require('./class/rabbitmq')
-const { getProducts } = require('./services/product')
+const productService = require('./services/product')
 
 const filterService = async (content) =>{
-  if (content.params.api_name == 'products') {
-    return await getProducts(content)
-  } else {
+  try {
+    return await productService[content.params.api_name](content)
+  } catch (error) {
     return {
       status: false,
-      message: 'product path not found'
+      message: 'service not found'
     }
   }
 }
